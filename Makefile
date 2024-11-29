@@ -2,7 +2,7 @@ CXX = g++
 
 CXXFLAGS = -std=c++11 -Wall
 
-SOURCES = lab10_welton.cpp InvalidDay.cpp InvalidMonth.cpp InvalidYear.cpp
+SOURCES = lab10_welton.cpp InvalidDay.cpp InvalidMonth.cpp InvalidYear.cpp InvalidFormat.cpp
 
 OBJECTS = $(SOURCES:.CPP=.O)
 

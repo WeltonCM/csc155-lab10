@@ -8,9 +8,11 @@ Description: This program showcases exception throwning
 #include <string>
 #include <vector>
 #include <chrono>
+#include <regex>
 #include "InvalidDay.h"
 #include "InvalidMonth.h"
 #include "InvalidYear.h"
+#include "InvalidFormat.h"
 
 using namespace std;
 
@@ -37,15 +39,19 @@ string convertDate(string dateOfBirth, vector<int>& years){
 
     const array<string, 12> months = {"January", "February", "March", "April", "May", "June",
             "July", "August", "September", "October", "November", "December"};
-
-    vector<string> tokens = split(dateOfBirth, "-");
+    vector<string> tokens;
+    regex pattern("\\d{1,2}-\\d{1,2}-\\d{4}");
+    if(regex_match(dateOfBirth, pattern)){
+        tokens = split(dateOfBirth, "-");
+    } else {
+        throw InvalidFormat(dateOfBirth);
+    }
     if(stoi(tokens.at(0)) <  1 || stoi(tokens.at(0)) > 12) {
         throw InvalidMonth(tokens.at(0));
     }
     if(stoi(tokens.at(1)) < 1 || stoi(tokens.at(1)) > 31) {
         throw InvalidDay(tokens.at(1));
     }
-
     if(stoi(tokens.at(2)) < (year - 150) || stoi(tokens.at(2)) > year){
         throw InvalidYear(tokens.at(2));
     }
@@ -62,11 +68,13 @@ int main() {
 
     while(yearsList.size() <= 10){
         string dateOfBirth;
-        cout << "Please enter a date using numbers (mm-dd-yyyy):" << endl;
+        cout << "Please enter a date of birth in numeric form (MM-DD-YYYY):" << endl;
         cin >> dateOfBirth;
         try {
             string date = convertDate(dateOfBirth, yearsList);
             cout << dateOfBirth + " -> " + date << endl;
+        } catch (InvalidFormat e){
+            cout << e.what() + "\n";
         } catch (InvalidMonth e){
             cout << e.what() + "\n";
         } catch (InvalidDay e){
